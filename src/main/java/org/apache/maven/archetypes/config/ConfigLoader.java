@@ -1,6 +1,5 @@
 package org.apache.maven.archetypes.config;
 
-import org.apache.maven.archetypes.repo.TextFileRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +25,7 @@ public class ConfigLoader {
     private void loadProperties() {
         Properties properties = new Properties();
 
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("application.properties")) {
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("META-INF/application.properties")) {
             if (Objects.isNull(input)) {
                 return;
             }

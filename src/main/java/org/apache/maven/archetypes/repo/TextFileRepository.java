@@ -11,16 +11,14 @@ import java.util.Scanner;
 public class TextFileRepository implements Repository {
     private final ConfigLoader configLoader = ConfigLoader.getInstance();
     private final String databaseFileUrl = configLoader.getDatabaseFileUrl();
+    private final File file = new File(databaseFileUrl);
 
     private final PrintWriter printWriter;
-    private final Scanner scanner;
 
     private static TextFileRepository instance;
 
     public TextFileRepository() {
         try {
-            var file = new File(databaseFileUrl);
-            scanner = new Scanner(file);
             printWriter = new PrintWriter(new FileOutputStream(file));
         } catch (FileNotFoundException ex) {
             throw new RuntimeException(ex);
@@ -36,6 +34,13 @@ public class TextFileRepository implements Repository {
 
     @Override
     public Optional<Person> findById(int id) {
+        Scanner scanner;
+        try {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+
         while (scanner.hasNext()) {
             var line = scanner.nextLine();
             if (line.contains(String.valueOf(id))) {
@@ -69,6 +74,6 @@ public class TextFileRepository implements Repository {
             throw new RuntimeException("record is empty");
         }
         var recordList = line.split("\\s+");
-        return new Person(recordList[0], recordList[1]);
+        return new Person(recordList[1], recordList[2]);
     }
 }
